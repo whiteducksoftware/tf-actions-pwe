@@ -5,8 +5,8 @@ variable "stage" {
   default     = "dev"
 
   validation {
-    condition     = var.stage == "dev" || var.stage == "tst" || var.stage == "prd"
-    error_message = "The name of the environment can only be \"dev\", \"tst\" and \"prd\"."
+    condition     = var.stage == "dev" || var.stage == "tst" || var.stage == "prod"
+    error_message = "The name of the environment can only be \"dev\", \"tst\" and \"prod\"."
   }
 }
 
