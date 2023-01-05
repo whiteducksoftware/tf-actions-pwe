@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         stage: ['dev', 'prod']
-    uses: .github/workflows/tf-init.yaml@dev
+    uses: ./.github/workflows/tf-init.yaml@dev
     with:
       stage: ${{ matrix.stage }}
       tf_version: ${{ env.tfVersion }}
@@ -32,7 +32,7 @@ jobs:
     strategy:
       matrix:
         stage: ['dev', 'prod']
-    uses: .github/workflows/tf-init.yaml@dev
+    uses: ./.github/workflows/tf-init.yaml@dev
     with:
       stage: ${{ matrix.stage }}
       tf_version: ${{ env.tfVersion }}
