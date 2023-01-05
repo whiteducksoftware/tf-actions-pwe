@@ -20,6 +20,9 @@ on:
         required: true
         description: The Environment.
     secrets:
+      GITHUB_TOKEN: 
+        description: 'The secrets.GITHUB_TOKEN so that the action can create a comment on the PR'
+        required: true
       ARM_CLIENT_ID:
         description: 'A token passed from the caller workflow'
         required: true
@@ -28,13 +31,13 @@ on:
         required: true
       SA_ACCESS_KEY:
         description: 'A token passed from the caller workflow'
-        required: false
+        required: true
       SA_NAME:
         description: 'A token passed from the caller workflow'
-        required: false
+        required: true
       SC_NAME:
         description: 'A token passed from the caller workflow'
-        required: false
+        required: true
 
 jobs:
   tf-init:
