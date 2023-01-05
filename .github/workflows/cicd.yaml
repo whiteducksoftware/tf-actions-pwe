@@ -28,6 +28,7 @@ jobs:
       tfVersion: $tfVersion
       tenantId: $tenantId
       subscriptionId: $subscriptionId
+    secrets: inherit
   deploy:
     strategy:
       matrix:
@@ -38,3 +39,4 @@ jobs:
       tfVersion: $tfVersion
       tenantId: $tenantId
       subscriptionId: $subscriptionId
+    secrets: inherit
