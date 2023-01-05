@@ -58,10 +58,15 @@ jobs:
           echo 'printing envs'
           env
 
+      - run: |
+          echo "Env: ${{ github.event.input.stage }}" 
+          echo "Branch: ${{ github.event.inputs.branch }}"
+          echo "Terraform: ${{ github.event.inputs.tfVersion }}"
+
       - name: Setup Terraform - ${{ github.event.inputs.tfVersion }}
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: ${{github.event. inputs.tfVersion}}
+          terraform_version: ${{github.event.inputs.tfVersion}}
 
       - name: Terraform Init
         id: init
