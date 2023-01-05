@@ -11,6 +11,22 @@ locals {
 }
 
 ################################
+###### Fetch Information #######
+################################
+
+# get current subscription (AzureRM)
+data "azurerm_subscription" "current" {
+}
+
+# get current client (AzureRM)
+data "azurerm_client_config" "current" {
+}
+
+# get current client (AzureAD)
+data "azuread_client_config" "current" {
+}
+
+################################
 ####### Resource Groups ########
 ################################
 
