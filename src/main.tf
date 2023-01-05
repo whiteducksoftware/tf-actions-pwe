@@ -4,9 +4,9 @@ locals {
   prefix = "actions"
   # Common tags to be assigned to all resources
   common_tags = {
-    env        = var.stage
-    managedBy  = data.azurerm_client_config.current.client_id
-    project    = "demo"
+    env       = var.stage
+    managedBy = data.azurerm_client_config.current.client_id
+    project   = "demo"
   }
 }
 
