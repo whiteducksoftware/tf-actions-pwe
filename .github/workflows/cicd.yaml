@@ -25,9 +25,9 @@ jobs:
     uses: ./.github/workflows/tf-init.yaml
     with:
       stage: ${{ matrix.stage }}
-      tf_version: 1.3.6
-      tenantId: "f1847c27-90be-4b38-a1b7-bd3a2029122f"
-      subscriptionId: "d47fae4a-a9d1-44f7-a09e-23bb76696838"
+      tfVersion: $tfVersion
+      tenantId: $tenantId
+      subscriptionId: $subscriptionId
   deploy:
     strategy:
       matrix:
@@ -35,6 +35,6 @@ jobs:
     uses: ./.github/workflows/tf-init.yaml
     with:
       stage: ${{ matrix.stage }}
-      tf_version: 1.3.6
-      tenantId: "f1847c27-90be-4b38-a1b7-bd3a2029122f"
-      subscriptionId: "d47fae4a-a9d1-44f7-a09e-23bb76696838"
+      tfVersion: $tfVersion
+      tenantId: $tenantId
+      subscriptionId: $subscriptionId
