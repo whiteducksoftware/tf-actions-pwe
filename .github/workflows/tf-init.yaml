@@ -22,10 +22,10 @@ on:
     secrets:
       ARM_CLIENT_ID:
         description: 'A token passed from the caller workflow'
-        required: false
+        required: true
       ARM_CLIENT_SECRET:
         description: 'A token passed from the caller workflow'
-        required: false
+        required: true
       SA_ACCESS_KEY:
         description: 'A token passed from the caller workflow'
         required: false
