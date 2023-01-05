@@ -39,7 +39,7 @@ on:
 jobs:
   tf-apply:
     runs-on: [self-hosted]
-    environment: ${{ input.stage }}
+    environment: ${{ github.event.input.stage }}
     defaults:
       run:
         shell: bash
@@ -48,16 +48,16 @@ jobs:
       ### AZURE Client details ###
       ARM_CLIENT_ID: ${{ secrets.arm_client_id }}
       ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
-      ARM_SUBSCRIPTION_ID: ${{ inputs.subscriptionId }}
-      ARM_TENANT_ID: ${{ inputs.tenantId }}
+      ARM_SUBSCRIPTION_ID: ${{ github.event.inputs.subscriptionId }}
+      ARM_TENANT_ID: ${{ github.event.inputs.tenantId }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3.2.0
 
-      - name: Setup Terraform - ${{ inputs.tfVersion }}
+      - name: Setup Terraform - ${{ github.event.inputs.tfVersion }}
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: ${{ inputs.tfVersion}}
+          terraform_version: ${{github.event. inputs.tfVersion}}
 
       - name: Terraform Init
         id: init
