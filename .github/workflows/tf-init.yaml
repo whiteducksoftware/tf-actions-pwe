@@ -7,7 +7,7 @@ on:
         description: 'A username passed from the caller workflow'
         required: true
         type: string
-      tf-version:
+      tfVersion:
         type: string
         required: true
         description: The Terrafrom version to use.
@@ -54,10 +54,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3.2.0
 
-      - name: Setup Terraform - ${{ inputs.tf_version }}
+      - name: Setup Terraform - ${{ inputs.tfVersion }}
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: ${{ inputs.tf_version }}
+          terraform_version: ${{ inputs.tfVersion}}
 
       - name: Terraform Init
         id: init
