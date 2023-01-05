@@ -37,7 +37,7 @@ jobs:
     uses: ./.github/workflows/tf-apply.yaml
     with:
       stage: ${{ matrix.stage }}
-      tfVersion: $tfVersion
-      tenantId: $tenantId
-      subscriptionId: $subscriptionId
+      tfVersion: ${{env.tfVersion}}" 
+      tenantId: ${{env.tenantId}}" 
+      subscriptionId: ${{env.subscriptionId}}" 
     secrets: inherit
