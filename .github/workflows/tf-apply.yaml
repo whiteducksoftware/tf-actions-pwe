@@ -3,14 +3,14 @@ name: TF_Apply
 on:
   workflow_call:
     inputs:
-      tf-version:
+      stage:
+        description: 'A username passed from the caller workflow'
+        required: true
+        type: string
+      tfVersion:
         type: string
         required: true
         description: The Terrafrom version to use.
-      stage:
-        type: string
-        required: true
-        description: The Environment.
       subscriptionId:
         type: string
         required: true
@@ -19,7 +19,22 @@ on:
         type: string
         required: true
         description: The Environment.
-    secrets: inherit
+    secrets:
+      arm_client_id:
+        description: 'A token passed from the caller workflow'
+        required: true
+      arm_client_secret:
+        description: 'A token passed from the caller workflow'
+        required: true
+      sa_access_key:
+        description: 'A token passed from the caller workflow'
+        required: true
+      sa_name:
+        description: 'A token passed from the caller workflow'
+        required: true
+      sc_name:
+        description: 'A token passed from the caller workflow'
+        required: true
 
 jobs:
   tf-apply:
@@ -39,10 +54,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3.2.0
 
-    - name: Setup Terraform - ${{ inputs.tf_version }}
+    - name: Setup Terraform - ${{ inputs.tfVersion }}
       uses: hashicorp/setup-terraform@v2
       with:
-        terraform_version: ${{ inputs.tf_version }}
+        terraform_version: ${{ inputs.tfVersion }}
 
     - name: Terraform Init
       id: init
