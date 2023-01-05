@@ -67,6 +67,9 @@ jobs:
           echo "ARM_TENANT_ID: ${{ inputs.tenantId }}"
           echo "ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}"
           echo "ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET}}"
+          echo "SA_ACCESS_KEY: ${{ secrets.SA_ACCESS_KEY}}"
+          echo "SA_NAME : ${{ secrets.SA_NAME }}"
+          echo "SC_NAME : ${{ secrets.SC_NAME }}"
 
       - name: Setup Terraform - ${{ github.event.inputs.tfVersion }}
         uses: hashicorp/setup-terraform@v2
