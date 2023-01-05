@@ -22,19 +22,19 @@ on:
     secrets:
       ARM_CLIENT_ID:
         description: 'A token passed from the caller workflow'
-        required: true
+        required: false
       ARM_CLIENT_SECRET:
         description: 'A token passed from the caller workflow'
-        required: true
+        required: false
       SA_ACCESS_KEY:
         description: 'A token passed from the caller workflow'
-        required: true
+        required: false
       SA_NAME:
         description: 'A token passed from the caller workflow'
-        required: true
+        required: false
       SC_NAME:
         description: 'A token passed from the caller workflow'
-        required: true
+        required: false
 
 jobs:
   tf-init:
@@ -53,6 +53,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3.2.0
+
+      - run : |
+          echo 'printing envs'
+          env
 
       - name: Setup Terraform - ${{ github.event.inputs.tfVersion }}
         uses: hashicorp/setup-terraform@v2
