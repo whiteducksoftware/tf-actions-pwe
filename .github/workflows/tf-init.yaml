@@ -20,19 +20,19 @@ on:
         required: true
         description: The Environment.
     secrets:
-      arm_client_id:
+      ARM_CLIENT_ID:
         description: 'A token passed from the caller workflow'
         required: true
-      arm_client_secret:
+      ARM_CLIENT_SECRET:
         description: 'A token passed from the caller workflow'
         required: true
-      sa_access_key:
+      SA_ACCESS_KEY:
         description: 'A token passed from the caller workflow'
         required: true
-      sa_name:
+      SA_NAME:
         description: 'A token passed from the caller workflow'
         required: true
-      sc_name:
+      SC_NAME:
         description: 'A token passed from the caller workflow'
         required: true
 
@@ -46,8 +46,8 @@ jobs:
         working-directory: src
     env:
       ### AZURE Client details ###
-      ARM_CLIENT_ID: ${{ secrets.arm_client_id }}
-      ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET}}
       ARM_SUBSCRIPTION_ID: ${{ github.event.inputs.subscriptionId }}
       ARM_TENANT_ID: ${{ github.event.inputs.tenantId }}
     steps:
@@ -63,10 +63,10 @@ jobs:
         id: init
         run: |
           terraform init -reconfigure -input=false \
-            -backend-config="access_key=${{ secrets.sa_access_key}}" \
-            -backend-config="storage_account_name=${{ secrets.sa_name }}" \
-            -backend-config="container_name=${{ secrets.sc_name }}" \
-            -backend-config="key=${{ inputs.stage }}.tfstate"
+            -backend-config="access_key=${{ secrets.SA_ACCESS_KEY}}" \
+            -backend-config="storage_account_name=${{ secrets.SA_NAME }}" \
+            -backend-config="container_name=${{ secrets.SC_NAME }}" \
+            -backend-config="key=${{ github.event.input.stage }}.tfstate"
 
       - name: Terraform Format
         id: fmt
@@ -80,5 +80,5 @@ jobs:
         id: plan
         run: |
           terraform plan -out ./tfplan.out \
-            -var-file=./env/${{ inputs.stage }}.tfvars
+            -var-file=./env/${{ github.event.input.stage }}.tfvars
         continue-on-error: true
