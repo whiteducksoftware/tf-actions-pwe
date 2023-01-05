@@ -37,8 +37,8 @@ on:
         required: true
 
 jobs:
-  tf-apply:
-    runs-on: [self-hosted]
+  tf-init:
+    runs-on: ubuntu-latest
     environment: ${{ github.event.input.stage }}
     defaults:
       run:

@@ -30,6 +30,7 @@ jobs:
       subscriptionId: $subscriptionId
     secrets: inherit
   deploy:
+    needs: build
     strategy:
       matrix:
         stage: ['dev', 'prod']
