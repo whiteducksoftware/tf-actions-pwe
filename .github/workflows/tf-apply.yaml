@@ -20,54 +20,54 @@ on:
         required: true
         description: The Environment.
     secrets:
-      arm_client_id:
+      ARM_CLIENT_ID:
         description: 'A token passed from the caller workflow'
         required: true
-      arm_client_secret:
+      ARM_CLIENT_SECRET:
         description: 'A token passed from the caller workflow'
         required: true
-      sa_access_key:
+      SA_ACCESS_KEY:
         description: 'A token passed from the caller workflow'
-        required: true
-      sa_name:
+        required: false
+      SA_NAME:
         description: 'A token passed from the caller workflow'
-        required: true
-      sc_name:
+        required: false
+      SC_NAME:
         description: 'A token passed from the caller workflow'
-        required: true
+        required: false
 
 jobs:
   tf-apply:
-    runs-on:  ubuntu-latest
-    environment: ${{ github.event.input.stage }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.stage }}
     defaults:
       run:
         shell: bash
         working-directory: src
     env:
       ### AZURE Client details ###
-      ARM_CLIENT_ID: ${{ secrets.arm_client_id }}
-      ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
-      ARM_SUBSCRIPTION_ID: ${{ github.event.inputs.subscriptionId }}
-      ARM_TENANT_ID: ${{ github.event.inputs.tenantId }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.subscriptionId }}
+      ARM_TENANT_ID: ${{ inputs.tenantId }}
     steps:
     - name: Checkout
       uses: actions/checkout@v3.2.0
 
-    - name: Setup Terraform - ${{ github.event.inputs.tfVersion }}
+    - name: Setup Terraform - ${{ inputs.tfVersion }}
       uses: hashicorp/setup-terraform@v2
       with:
-        terraform_version: ${{ github.event.inputs.tfVersion }}
+        terraform_version: ${{ inputs.tfVersion }}
 
     - name: Terraform Init
       id: init
       run: |
         terraform init -reconfigure -input=false \
-          -backend-config="access_key=${{ secrets.sa_access_key}}" \
-          -backend-config="storage_account_name=${{ secrets.sa_name }}" \
-          -backend-config="container_name=${{ secrets.sc_name }}" \
+          -backend-config="access_key=${{ secrets.SA_ACCESS_KEY}}" \
+          -backend-config="storage_account_name=${{ secrets.SA_NAME }}" \
+          -backend-config="container_name=${{ secrets.SC_NAME }}" \
           -backend-config="key=${{ inputs.stage }}.tfstate"
 
     - name: Terraform Apply
       id: apply
-      run: terraform apply -auto-approve ./tfplan.out
+      run: terraform apply -auto-approve ./${{ inputs.stage }}_tfplan.out
