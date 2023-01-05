@@ -1,0 +1,69 @@
+name: TF_Init
+
+on:
+  workflow_call:
+    inputs:
+      tf-version:
+        type: string
+        required: true
+        description: The Terrafrom version to use.
+      stage:
+        type: string
+        required: true
+        description: The Environment.
+      subscriptionId:
+        type: string
+        required: true
+        description: The Environment.
+      tenantId:
+        type: string
+        required: true
+        description: The Environment.
+    secrets: inherit
+
+jobs:
+  tf-apply:
+    runs-on: [self-hosted]
+    environment: ${{ input.stage }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: src
+    env:
+      ### AZURE Client details ###
+      ARM_CLIENT_ID: ${{ secrets.arm_client_id }}
+      ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.subscriptionId }}
+      ARM_TENANT_ID: ${{ inputs.tenantId }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.2.0
+
+      - name: Setup Terraform - ${{ inputs.tf_version }}
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ inputs.tf_version }}
+
+      - name: Terraform Init
+        id: init
+        run: |
+          terraform init -reconfigure -input=false \
+            -backend-config="access_key=${{ secrets.sa_access_key}}" \
+            -backend-config="storage_account_name=${{ secrets.sa_name }}" \
+            -backend-config="container_name=${{ secrets.sc_name }}" \
+            -backend-config="key=${{ inputs.stage }}.tfstate"
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt --check
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -out ./tfplan.out \
+            -var-file=./env/${{ inputs.stage }}.tfvars
+        continue-on-error: true
