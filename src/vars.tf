@@ -9,3 +9,15 @@ variable "stage" {
     error_message = "The name of the environment can only be \"dev\", \"tst\" and \"prd\"."
   }
 }
+
+# resource location
+variable "location" {
+  description = "The location used for all resources"
+  type        = string
+  default     = "germanywestcentral"
+
+  validation {
+    condition     = var.location == "germanywestcentral" || var.location == "westeurope"
+    error_message = "The location can only be \"germanywestcentral\" or \"westeurope\"."
+  }
+}
