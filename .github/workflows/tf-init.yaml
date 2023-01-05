@@ -54,14 +54,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3.2.0
 
-      - run : |
+      - name: Print ENV
+        run : |
           echo 'printing envs'
           env
 
-      - run: |
-          echo "Env: ${{ github.event.input.stage }}" 
+      - name: Print Input
+        run: |
+          echo "Env: ${{ github.event.inputs.stage }}" 
           echo "Branch: ${{ github.event.inputs.branch }}"
           echo "Terraform: ${{ github.event.inputs.tfVersion }}"
+          echo "Env2: ${{ inputs.stage }}" 
+          echo "Branch2: ${{ inputs.branch }}"
+          echo "Terraform2: ${{ inputs.tfVersion }}"
+          echo "Env3: ${{ input.stage }}" 
+          echo "Branch3: ${{ input.branch }}"
+          echo "Terraform3: ${{ input.tfVersion }}"
 
       - name: Setup Terraform - ${{ github.event.inputs.tfVersion }}
         uses: hashicorp/setup-terraform@v2
