@@ -82,6 +82,6 @@ jobs:
         pwd
         ls -la
 
-    #- name: Terraform Apply
-    #  id: apply
-    #  run: terraform apply -auto-approve ./src/${{ inputs.stage }}_tfplan.out
+    - name: Terraform Apply
+      id: apply
+      run: terraform apply -auto-approve ${{ inputs.stage }}_tfplan.out
