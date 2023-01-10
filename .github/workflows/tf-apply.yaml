@@ -68,6 +68,12 @@ jobs:
           -backend-config="container_name=${{ secrets.SC_NAME }}" \
           -backend-config="key=${{ inputs.stage }}.tfstate"
 
+    - name: Download Terraform Plan Artifact
+      uses: actions/download-artifact@v3.0.2
+      with:
+        name: "${{ inputs.stage }}_tfplan.out"
+        path: "./src/${{ inputs.stage }}_tfplan.out"
+
     - name: Terraform Apply
       id: apply
       run: terraform apply -auto-approve ./${{ inputs.stage }}_tfplan.out
