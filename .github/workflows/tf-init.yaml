@@ -20,9 +20,6 @@ on:
         required: true
         description: The Environment.
     secrets:
-      GITHUB_TOKEN:
-        description: 'The secrets.GITHUB_TOKEN so that the action can create a comment on the PR'
-        required: true
       ARM_CLIENT_ID:
         description: 'A token passed from the caller workflow'
         required: true
