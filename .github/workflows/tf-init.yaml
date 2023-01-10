@@ -108,9 +108,9 @@ jobs:
           pwd
           ls -la
 
-      # - name: Upload Terraform Plan Artifact
-      #   uses: actions/upload-artifact@v3.1.2
-      #   with:
-      #     name: "${{ inputs.stage }}_tfplan.out"
-      #     path: "./src/${{ inputs.stage }}_tfplan.out"
-      #     retention-days: 5
+      - name: Upload Terraform Plan Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: "${{ inputs.stage }}_tfplan"
+          path: "${{ inputs.stage }}_tfplan.out.zip"
+          retention-days: 5

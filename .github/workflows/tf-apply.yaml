@@ -71,9 +71,14 @@ jobs:
     - name: Download Terraform Plan Artifact
       uses: actions/download-artifact@v3.0.2
       with:
-        name: "${{ inputs.stage }}_tfplan.out"
-        path: "./src/${{ inputs.stage }}_tfplan.out"
+        name: "${{ inputs.stage }}_tfplan"
+        path: "${{ inputs.stage }}_tfplan.out.zip"
 
-    - name: Terraform Apply
-      id: apply
-      run: terraform apply -auto-approve ./src/${{ inputs.stage }}_tfplan.out
+    - name: Print files & pwd
+      run : |
+        pwd
+        ls -la
+
+    #- name: Terraform Apply
+    #  id: apply
+    #  run: terraform apply -auto-approve ./src/${{ inputs.stage }}_tfplan.out
