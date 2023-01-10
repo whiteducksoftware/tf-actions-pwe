@@ -74,6 +74,9 @@ jobs:
         name: "${{ inputs.stage }}_tfplan"
         path: "./src"
 
+    - name: Decompress TF Plan artifact
+      run: unzip ${{ inputs.stage }}_tfplan.out.zip
+
     - name: Print files & pwd
       run : |
         pwd
