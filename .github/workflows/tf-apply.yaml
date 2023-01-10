@@ -72,7 +72,6 @@ jobs:
       uses: actions/download-artifact@v3.0.2
       with:
         name: "${{ inputs.stage }}_tfplan"
-        path: "${{ inputs.stage }}_tfplan.out.zip"
 
     - name: Print files & pwd
       run : |
