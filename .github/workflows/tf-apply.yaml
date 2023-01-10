@@ -77,11 +77,6 @@ jobs:
     - name: Decompress TF Plan artifact
       run: unzip ${{ inputs.stage }}_tfplan.out.zip
 
-    - name: Print files & pwd
-      run : |
-        pwd
-        ls -la
-
     - name: Terraform Apply
       id: apply
       run: terraform apply -auto-approve ${{ inputs.stage }}_tfplan.out
