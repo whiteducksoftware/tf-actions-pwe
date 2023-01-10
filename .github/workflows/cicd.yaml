@@ -3,9 +3,12 @@ name: Terraform
 on:
   push:
     branches:
-     - main
-     - dev
+      - main
+      - dev
   pull_request:
+    branches:
+      - main
+      - dev
 
 defaults:
   run:
