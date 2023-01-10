@@ -76,4 +76,4 @@ jobs:
 
     - name: Terraform Apply
       id: apply
-      run: terraform apply -auto-approve ./${{ inputs.stage }}_tfplan.out
+      run: terraform apply -auto-approve ./src/${{ inputs.stage }}_tfplan.out
