@@ -99,3 +99,10 @@ jobs:
           terraform plan -out ./${{ inputs.stage }}_tfplan.out \
             -var-file=./env/${{ inputs.stage }}.tfvars
         continue-on-error: true
+
+      - name: Upload Terraform Plan Artifact
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: "${{ inputs.stage }}_tfplan.out"
+          path: "./${{ inputs.stage }}_tfplan.out"
+          retention-days: 5
