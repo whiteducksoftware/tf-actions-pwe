@@ -1,0 +1,82 @@
+name: TF_Apply
+
+on:
+  workflow_call:
+    inputs:
+      stage:
+        description: 'A username passed from the caller workflow'
+        required: true
+        type: string
+      tfVersion:
+        type: string
+        required: true
+        description: The Terrafrom version to use.
+      subscriptionId:
+        type: string
+        required: true
+        description: The Environment.
+      tenantId:
+        type: string
+        required: true
+        description: The Environment.
+    secrets:
+      ARM_CLIENT_ID:
+        description: 'A token passed from the caller workflow'
+        required: true
+      ARM_CLIENT_SECRET:
+        description: 'A token passed from the caller workflow'
+        required: true
+      SA_ACCESS_KEY:
+        description: 'A token passed from the caller workflow'
+        required: false
+      SA_NAME:
+        description: 'A token passed from the caller workflow'
+        required: false
+      SC_NAME:
+        description: 'A token passed from the caller workflow'
+        required: false
+
+jobs:
+  tf-apply:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.stage }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: src
+    env:
+      ### AZURE Client details ###
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.subscriptionId }}
+      ARM_TENANT_ID: ${{ inputs.tenantId }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3.2.0
+
+    - name: Setup Terraform - ${{ inputs.tfVersion }}
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: ${{ inputs.tfVersion }}
+
+    - name: Terraform Init
+      id: init
+      run: |
+        terraform init -reconfigure -input=false \
+          -backend-config="access_key=${{ secrets.SA_ACCESS_KEY}}" \
+          -backend-config="storage_account_name=${{ secrets.SA_NAME }}" \
+          -backend-config="container_name=${{ secrets.SC_NAME }}" \
+          -backend-config="key=${{ inputs.stage }}.tfstate"
+
+    - name: Download Terraform Plan Artifact
+      uses: actions/download-artifact@v3.0.2
+      with:
+        name: "${{ inputs.stage }}_tfplan"
+        path: "./src"
+
+    - name: Decompress TF Plan artifact
+      run: unzip ${{ inputs.stage }}_tfplan.out.zip
+
+    - name: Terraform Apply
+      id: apply
+      run: terraform apply -auto-approve ${{ inputs.stage }}_tfplan.out

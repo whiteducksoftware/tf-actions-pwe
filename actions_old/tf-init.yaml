@@ -1,0 +1,111 @@
+name: TF_Init
+
+on:
+  workflow_call:
+    inputs:
+      stage:
+        description: 'A username passed from the caller workflow'
+        required: true
+        type: string
+      tfVersion:
+        type: string
+        required: true
+        description: The Terrafrom version to use.
+      subscriptionId:
+        type: string
+        required: true
+        description: The Environment.
+      tenantId:
+        type: string
+        required: true
+        description: The Environment.
+    secrets:
+      ARM_CLIENT_ID:
+        description: 'A token passed from the caller workflow'
+        required: true
+      ARM_CLIENT_SECRET:
+        description: 'A token passed from the caller workflow'
+        required: true
+      SA_ACCESS_KEY:
+        description: 'A token passed from the caller workflow'
+        required: true
+      SA_NAME:
+        description: 'A token passed from the caller workflow'
+        required: true
+      SC_NAME:
+        description: 'A token passed from the caller workflow'
+        required: true
+
+jobs:
+  tf-init:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.stage }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: src
+    env:
+      ### AZURE Client details ###
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.subscriptionId }}
+      ARM_TENANT_ID: ${{ inputs.tenantId }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.2.0
+
+      # - name: Print ENV
+      #   run : |
+      #     echo 'printing envs'
+      #     env
+
+      # - name: Print Input
+      #   run: |
+      #     echo "Env: ${{ inputs.stage }}"
+      #     echo "TF: ${{ inputs.tfVersion }}"
+      #     echo "ARM_SUBSCRIPTION_ID: ${{ inputs.subscriptionId }}"
+      #     echo "ARM_TENANT_ID: ${{ inputs.tenantId }}"
+      #     echo "ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}"
+      #     echo "ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET}}"
+      #     echo "SA_ACCESS_KEY: ${{ secrets.SA_ACCESS_KEY}}"
+      #     echo "SA_NAME : ${{ secrets.SA_NAME }}"
+      #     echo "SC_NAME : ${{ secrets.SC_NAME }}"
+
+      - name: Setup Terraform - ${{ inputs.tfVersion }}
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ inputs.tfVersion }}
+
+      - name: Terraform Init
+        id: init
+        run: |
+          terraform init -reconfigure -input=false \
+            -backend-config="access_key=${{ secrets.SA_ACCESS_KEY}}" \
+            -backend-config="storage_account_name=${{ secrets.SA_NAME }}" \
+            -backend-config="container_name=${{ secrets.SC_NAME }}" \
+            -backend-config="key=${{ inputs.stage }}.tfstate"
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt --check
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -out ./${{ inputs.stage }}_tfplan.out \
+            -var-file=./env/${{ inputs.stage }}.tfvars
+        continue-on-error: true
+
+      - name: Compress TF Plan artifact
+        run: zip -r ${{ inputs.stage }}_tfplan.out.zip ./${{ inputs.stage }}_tfplan.out
+
+      - name: Upload Terraform Plan Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: "${{ inputs.stage }}_tfplan"
+          path: "./src/${{ inputs.stage }}_tfplan.out.zip"
+          retention-days: 5
